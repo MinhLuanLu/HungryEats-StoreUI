@@ -1,0 +1,118 @@
+/* General styles for the dashboard */
+.main-container {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  /* Table styles */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table thead {
+    background-color: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  
+  .table th,
+  .table td {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .table th.text-right,
+  .table td.text-right {
+    text-align: right;
+  }
+  
+  .table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f3f4f6;
+  }
+  
+  /* Action button styles */
+  .actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  
+  .button {
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .button.accept {
+    background-color: #008080;
+  }
+  
+  .button.receive:hover {
+    background-color: #16a34a;
+  }
+  
+  .button.cancel {
+    background-color: 'grey';
+    color: #000000;
+  }
+  
+  .button.cancel:hover {
+    background-color: #dc2626;
+  }
+
+  .close_store_button{
+    padding: 10px;
+    background-color: #dc2626;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .store_status{
+    font-size: 20px;
+  }
+
+  .menu_btn{
+    background-color: #008080;
+    padding: 5px 15px 5px 15px;
+    border-width: 1px;
+    color: #FFFFFF;
+    font-size: 15px;
+    border-radius: 5px;
+  }
+
+  .menu_btn:hover{
+    cursor: pointer;
+  }
