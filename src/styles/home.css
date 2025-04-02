@@ -1,0 +1,93 @@
+.homeContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgb(225, 228, 231);
+    height: 100vh;
+}
+
+
+
+.sideBar{
+    width: 20%;
+    height: auto;
+    justify-items: center;
+}
+
+.titleContainer{
+    width: 90%;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    flex-direction: row;
+    align-items: center;
+}
+.titleContainer:hover{
+    cursor: pointer;
+}
+
+.icon{
+    margin: 15px;
+}
+
+.title{
+    font-size: 16px;
+    font-weight:bolder;
+}
+
+.mainPage{
+    flex: 1;
+    background-color: #ffffff;
+}
+
+
+.orderHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #000000;
+}
+
+.order-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 20px auto;
+    gap: 5px;
+}
+
+.order-header, .order-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    padding: 10px;
+}
+
+.order-header {
+    font-weight: bold;
+}
+
+.field {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+.multiline {
+    white-space: normal; /* Allow line breaks */
+    word-wrap: break-word; /* Break long words */
+}
+
+.buttonField{
+    border-bottom: 1px solid #ccc;
+}
+
+.action-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: #008080;
+}
+

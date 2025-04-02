@@ -1,0 +1,134 @@
+/* General container styles */
+.menu_page_Container {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+}
+
+.edit_Containers{
+    display: flex;
+    position: fixed;
+}
+
+/* Right section - menu content */
+.menu_page_right_section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 'auto';
+    height: 550px;
+    position: relative;
+    overflow-y:auto;
+}
+
+.menu_Container{
+    width: 100%;
+    display: flex;
+    min-height: 50px;
+    height: auto;
+}
+
+.menu_button{
+    background-color: #007bff;
+    color: #FFFFFF;
+    border: none;
+    height: 35px;
+    width: 100%;
+    font-size: 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.menu_button:hover{
+    cursor: pointer;
+    background-color: #0056b3;
+}
+
+
+/* Menu table */
+.food_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.food_table thead {
+    background-color: #f4f4f4;
+    border-bottom: 2px solid #ddd;
+}
+
+.food_table th,
+.food_table td {
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+}
+
+.food_table th {
+    font-weight: bold;
+}
+
+.food_table tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+.food_table tbody tr:last-child {
+    border-bottom: none;
+}
+
+/* Input field for quantity */
+.quantity_input {
+    width: 55px;
+    padding: 5px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.food_table{
+    overflow-y: auto;
+}
+
+/* Update button */
+.food_table button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.food_table button:hover {
+    background-color: #0056b3;
+}
+
+.close_btn{
+    margin-left: 10px;
+    padding: 5px 10px 5px 10px;
+    background-color: red;
+    border-width: 1px;
+    color: #FFFFFF;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.close_btn:hover{
+    cursor: pointer;
+}

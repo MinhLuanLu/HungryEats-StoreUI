@@ -1,5 +1,5 @@
 /* General container styles */
-.menu_Container {
+.edit_Container {
     display: flex;
     position: fixed;
     top: 0;
@@ -11,10 +11,11 @@
     align-items: center;
     justify-content: center;
     font-family: Arial, sans-serif;
+    
 }
 
 /* Right section - menu content */
-.menu_right_section {
+.edit_right_section {
     background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;
@@ -26,38 +27,39 @@
     height: 550px;
     position: relative;
     overflow-y:auto;
+    min-width: 900px;
 }
 
 
 /* Menu table */
-.menu_table {
+.edit_table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-.menu_table thead {
+.edit_table thead {
     background-color: #f4f4f4;
     border-bottom: 2px solid #ddd;
 }
 
-.menu_table th,
-.menu_table td {
+.edit_table th,
+.edit_table td {
     padding: 10px;
     text-align: left;
     font-size: 16px;
     color: #333;
 }
 
-.menu_table th {
+.edit_table th {
     font-weight: bold;
 }
 
-.menu_table tbody tr {
+.edit_table tbody tr {
     border-bottom: 1px solid #eee;
 }
 
-.menu_table tbody tr:last-child {
+.edit_table tbody tr:last-child {
     border-bottom: none;
 }
 
@@ -70,12 +72,12 @@
     border-radius: 4px;
 }
 
-.menu_table{
+.edit_table{
     overflow-y: auto;
 }
 
 /* Update button */
-.menu_table button {
+.edit_table button {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -86,7 +88,7 @@
     transition: background-color 0.3s ease;
 }
 
-.menu_table button:hover {
+.edit_table button:hover {
     background-color: #0056b3;
 }
 
@@ -103,4 +105,23 @@
 
 .close_btn:hover{
     cursor: pointer;
+}
+
+.editInput{
+    min-width: 500px;
+    height: 50px;
+    width: auto;
+    font-size: 15px;
+    padding-left: 5px;
+}
+
+.editInputFoodName{
+    height: 50px;
+    width: auto;
+    font-size: 15px;
+    text-align: center;
+}
+
+.edit_button{
+    width: 80px;
 }

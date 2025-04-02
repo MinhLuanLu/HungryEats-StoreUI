@@ -1,19 +1,15 @@
-import React, { useState , useContext} from 'react';
-import { UserContext } from '../context/user_Context';
-import Store from '../components/store';
+import React, { useState} from 'react';
+import { API_LOCATION, ADMIN } from '../../config';
+import Loading from '../components/loading';
+import { useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
-
-  const [email, setEmail] = useState('');
+  const navigate = useNavigate()
+  const [email, setEmail] = useState(sessionStorage.getItem("Email"));
   const [password, setPassword] = useState('');
-
-  const [store_name, setStore_name] = useState()
-  const [store_description, setStore_description] = useState()
-  const [display_store, setDisplay_store] = useState(false)
-
-  const {  public_Email, setPublic_Email} = useContext(UserContext);
-  const {public_Store_name,setPublic_Store_name} = useContext(UserContext)
-  const {public_user_id, setPublic_User_id} = useContext(UserContext)
+  const [admin, setAdmin] = useState(false)
+  const [user, setUser] = useState({})
 
   async function handleSubmit (event) {
     event.preventDefault();
@@ -23,7 +19,7 @@ const Login = () => {
         "Password": password
     }
 
-    await fetch('http://localhost:3000/login/api',{
+    await fetch(`${API_LOCATION}/login/api`,{
         method:'POST',
         headers:{
             'Content-Type': 'application/json'
@@ -33,17 +29,11 @@ const Login = () => {
     .then(res=>{
         if(res.ok){
             return res.json().then(data=>{
-                if(data){
-                    alert(data.message)
-                    setStore_name(data.Seller_info[0]['Store_name'])
-                  
-                    sessionStorage.setItem('User_id', data.Seller_info[0]['User_id'])
-                    sessionStorage.setItem('Store_name',data.Seller_info[0]['Store_name'])
-                    sessionStorage.setItem('Email', email)
-
-                    setStore_description(data.Seller_info[0]['Store_description'])
-                    if(data.User_info[0]['Role'] == "Seller"){
-                      setDisplay_store(true)
+                if(data.success){
+                    const [storeInfo] = data?.data
+                    if(storeInfo?.Role == ADMIN.business){
+                      setUser(storeInfo)
+                      setAdmin(true)
                     }
                 }
             })
@@ -58,11 +48,20 @@ const Login = () => {
     
   };
 
+  if(admin){
+    setTimeout(() => {
+      handleNavigate()
+      setAdmin(!admin)
+    }, 3000);
+  }
 
-  if(display_store) return <Store store_name={store_name} store_description={store_description}/>
+  function handleNavigate(){
+    navigate("/Home", {state: user})
+  }  
 
+ 
 
-
+  
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Login</h2>
@@ -91,6 +90,11 @@ const Login = () => {
         </div>
         <button type="submit" style={styles.button}>Login</button>
       </form>
+      { admin &&
+        <div style={{backgroundColor:'#f7f7f7', width:'500px', height:"500px", display:'flex', position:'fixed', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+          <Loading/>
+        </div>
+      }
     </div>
   );
 };

@@ -1,0 +1,132 @@
+/* Customize CSS Styles */
+.customize-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: white;
+  }
+  
+  .customize-wrapper {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .customize-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .customize-back-button {
+    padding: 8px;
+    background-color: transparent;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+  }
+  
+  .customize-back-button:hover {
+    background-color: #f3f3f3;
+  }
+  
+  .customize-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-left: 16px;
+  }
+  
+  .customize-section {
+    margin-bottom: 32px;
+  }
+  
+  .customize-toggle-button {
+    width: 100%;
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .customize-toggle-button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .customize-section-header {
+    display: flex;
+    align-items: center;
+  }
+  
+  .customize-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    color: #6b7280;
+  }
+  
+  .customize-section-title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .customize-section-content {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
+  
+  .customize-form > div {
+    margin-bottom: 16px;
+  }
+  
+  .customize-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #374151;
+  }
+  
+  .customize-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+  }
+  
+  .customize-history {
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .customize-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .customize-history-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .customize-order-number {
+    font-weight: 500;
+  }
+  
+  .customize-order-date {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .customize-order-amount {
+    color: #10b981;
+    font-weight: 600;
+  }
+  

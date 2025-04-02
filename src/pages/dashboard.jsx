@@ -1,34 +1,39 @@
 
 import React, { useState , useEffect, useRef } from "react";
 import {io} from 'socket.io-client'
-import "../style_css/dashboard.css" 
-import { data } from "react-router-dom";
-import Menu from "./menu";
+import {API_LOCATION, SOCKETIO_LOCATION} from '../../config'
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+import MenuManagement from "./menuManagement";
+import Header  from "../components/header";
+import "../styles/dashboard.css";
 
 export default function StoreDashboard() {
-
+    const location = useLocation();
     const SocketIO = useRef(null)
     const [time, setTime] = useState(new Date());
 
-    const [user_id, setUser_id] = useState(sessionStorage.getItem("User_id"))
-    const [store_name, setStore_name] = useState(sessionStorage.getItem("Store_name"))
-    const [store_status, setStore_status] = useState()
-
-    const [order_id, setOrderid] = useState(null)
+    const [user_id, setUser_id] = useState(sessionStorage.getItem("User_id") != "" ? sessionStorage.getItem("User_id") : location?.state?.user_id );
+    const [store_name, setStore_name] = useState(sessionStorage.getItem("Store_name") != "" ? sessionStorage.getItem("Store_name") : location?.state?.store_name);
+    const [email, setEmail] = useState(sessionStorage.getItem("Email") != "" ? sessionStorage.getItem("Email") : location?.state?.email);
+    
+    const [store_status, setStore_status] = useState();
     const [orders, setOrders] = useState([]);
-    const [display_menu, setDisplay_menu] = useState(false)
-    const [update_food_quantity, setUpdate_food_quantity] = useState([])
+    const [displayMenu, setDisplayMenu] = useState(false);
+    const [update_food_quantity, setUpdate_food_quantity] = useState([]);
+    const [menu, setMenu] = useState([]);
 
     useEffect(()=>{
-        SocketIO.current = io(`http://localhost:3001`);
-
+        /*
+        SocketIO.current = io(SOCKETIO_LOCATION);
         console.log(SocketIO.current.id)
 
         SocketIO.current.on('connect', ()=>{
             SocketIO.current.emit("connection", {Socket_id: SocketIO.current.id, User_id: user_id, Store_name: store_name})
         })
 
-        SocketIO.current.on('sending_order', (order)=>{
+        SocketIO.current.on('user.newOrderHandler.1', (order)=>{
+            alert('getORder')
             setOrders((preorders)=>[...preorders, order[0]])
             for(let i = 0; i < order.length; i++){
                 SocketIO.current.emit('confirm_received_order', {Order_id: order[i]["Order_id"], Sender_id: order[i]["User_id"]})
@@ -45,98 +50,26 @@ export default function StoreDashboard() {
               );
             // add a new update order to the list:
             setOrders((preorders)=>[...preorders, order])
-        })
-
-        
+        });
 
         // Handle Disconnect Socketio from Server
         SocketIO.current.on('disconnect', (reason) => {
-           console.log('disconnect to SocketIO')
-          });
+           console.log('disconnect to SocketIO', reason)
+        });
 
         SocketIO.current.on('update_Store_status', (data)=>{
             setStore_status(data["Status"])
-        })
+        });
 
         SocketIO.current.on('update_food_quantity', (data)=>{
             setUpdate_food_quantity(data)
-        })
-
+        });
+        */
     },[])
 
-    useEffect(()=>{
-            async function Handle_Get_Food(data) {
-                await fetch(`http://localhost:3000/food_list/api`,{
-                    method: 'POST',
-                    headers:{
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(res=>{
-                    if(res.ok){
-                        return res.json().then(data=>{
-                            if(data){
-                                console.log(data.message)
-                                setUpdate_food_quantity(data.food_list)
-                            }
-                        })
-                    }
-                    if(res === 400){
-                        return res.json()
-                    }
-                })
-                .catch(error=>{
-                    console.error(error)
-                })
-            }    
-    
-            let data = {
-                "Request": "Get_Food_List",
-                "Store_Name": store_name
-            }
-    
-    
-            Handle_Get_Food(data)
-           
-        },[])
-
-    useEffect(()=>{
-        async function Handle_get_today_orders(date) {
-            await fetch(`http://localhost:3000/get_today_order/api`,{
-                method: 'POST',
-                headers:{
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(date)
-            })
-            .then(res=>{
-                if(res.ok){
-                    return res.json().then(data=>{
-                        if(data){
-                            console.log(data.order_in_today)
-                            setOrders(data.order_in_today)
-                            //alert(data.message)
-                        }
-                    })
-                }
-                if(res === 400){
-                    return res.json()
-                }
-            })
-            .catch(error=>{
-                console.error(error)
-            })
-        }    
-
-        let date = time.getFullYear() + '-' + 
-          String(time.getMonth() + 1).padStart(2, '0') + '-' + 
-          String(time.getDate()).padStart(2, '0'); // Format the date as YYYY-MM-DD
-        
-
-        Handle_get_today_orders({"Date": date, "User_id": user_id, "Store_name": store_name})
-    },[])
-
+    let date = time.getFullYear() + '-' + 
+    String(time.getMonth() + 1).padStart(2, '0') + '-' + 
+    String(time.getDate()).padStart(2, '0'); // Format the date as YYYY-MM-DD
 
     // Display live Time in Dashboard
     useEffect(() => {
@@ -150,40 +83,71 @@ export default function StoreDashboard() {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
     };
     
-    
-    let date = time.getFullYear() + '-' + 
-      String(time.getMonth() + 1).padStart(2, '0') + '-' + 
-      String(time.getDate()).padStart(2, '0'); // Format the date as YYYY-MM-DD
 
+    useEffect(()=> {
+        try{
+
+            axios.post(`${API_LOCATION}/menu/api`,{
+                Store_name: store_name,
+                User_id: user_id
+            })
+            .then(respose =>{
+                console.log(respose?.message);
+                setMenu(respose?.data?.data)
+            });
+
+            axios.post(`${API_LOCATION}/foodList/api`,{
+                Request : true,
+                Store_name: store_name
+            })
+            .then(res =>{
+                console.log(res?.data?.message);
+                setUpdate_food_quantity(res?.data?.data)
+            });
+
+            axios.post(`${API_LOCATION}/get_today_order/api`,{
+                Date: date, 
+                User_id: user_id, 
+                Store_name: store_name
+            })
+            .then(res =>{
+                console.log(res?.data?.message);
+                //setOrders(res?.data?.data)
+            })
+        }
+        catch(error){
+            console.log(error)
+        }
+    },[])
 
 
     function Handle_Close_Store(){
-        SocketIO.current.emit('close_store',{User_id : user_id})
-    }
+        SocketIO.current.emit('close_store',{
+            User_id : user_id
+        })
+    };
 
     function handleAccept(order_id, sender_id){
-        
         SocketIO.current.emit('accept_order', {
             Order_id: order_id,
             Sender_id: sender_id
         })     
-    }
+    };
 
     function handleCancel(order_id, sender_id){
         SocketIO.current.emit('decline_order', {
             Order_id: order_id,
             Sender_id: sender_id
-        })  
-        
-    }
+        })   
+    };
 
 
     return (
     <>
+        <Header displayMenu={()=> setDisplayMenu(true)} store_name={store_name} user_id={user_id} email={email}/>
         <main className="main-container">
-            <header className="header">
+            <header className="dashboard_header">
                 <div>
-                <p>UserID: {user_id}</p>
                     <h1>{store_name}</h1>
                     {   store_status == 1
                         ?<p className="store_status" >Status: <span style={{color:'green'}}>Open</span></p>
@@ -193,11 +157,12 @@ export default function StoreDashboard() {
                     <h3>Today: {date}</h3>
                 </div>
 
-                <h2>{formatTime(time)}</h2>
                 <div>
+                    <h2>{formatTime(time)}</h2>
+                </div>
+                
+                <div className="button_Container">
                     <button className="close_store_button" onClick={Handle_Close_Store}>Close Store</button>
-                    <a href=""><p>History orders</p></a>
-                    <button className="menu_btn" onClick={()=> setDisplay_menu(true)}>Menu</button>
                 </div>
             </header>
 
@@ -264,7 +229,7 @@ export default function StoreDashboard() {
                 </table>
             </div>
         </main>
-        <Menu display_menu={display_menu} SocketIO={SocketIO} store_name={store_name} onclose={()=> setDisplay_menu(false)} user_id={user_id} update_food_quantity={update_food_quantity}/>
+        <MenuManagement displayMenu={displayMenu} SocketIO={SocketIO} store_name={store_name} onclose={()=> setDisplayMenu(false)} user_id={user_id} update_food_quantity={update_food_quantity} menu={menu}/>
     </>
     );
     }

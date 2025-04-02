@@ -6,7 +6,7 @@
     padding: 24px;
   }
   
-  .header {
+  .dashboard_header {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -16,9 +16,14 @@
     justify-content: space-between;
   }
   
-  .header h1 {
+  .dashboard_header h1 {
     font-size: 2rem;
     font-weight: bold;
+  }
+
+  .button_Container{
+    background-color: yellow;
+    margin-left: 10px;
   }
   
   /* Table styles */
