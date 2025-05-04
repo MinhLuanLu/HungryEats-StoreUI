@@ -1,0 +1,74 @@
+:root {
+    --main-color: #008080;
+    --bg-color: #f3f3f3;
+    --text-color: #222;
+    --card-bg: #fff;
+    --border-color: #ccc;
+  }
+  
+  .container {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .column {
+    flex: 1;
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    min-height: 80vh;
+  }
+  
+  .column h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--main-color);
+  }
+  
+  .order {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 18px;
+  }
+  
+  .order span {
+    display: block;
+    margin-bottom: 6px;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .buttons button {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  
+  .buttons button.accept {
+    border-color: var(--main-color);
+    color: var(--main-color);
+  }
+  
+  .buttons button.decline {
+    border-color: #888;
+    color: #888;
+  }
+  
+  .buttons button:hover {
+    background-color: #eee;
+  }
+  

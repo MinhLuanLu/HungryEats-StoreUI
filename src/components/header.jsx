@@ -1,26 +1,41 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { Home, Settings, Menu, Palette, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { socketConfig } from "../../config";
 import "../styles/header.css"
 
-export default function Header({displayMenu, store_name, user_id, email}) {
-    const navigate = useNavigate()
+export default function Header({SocketIO, user}) {
+    const navigate = useNavigate();
+    const [storeState, setStoreState] = useState(true);
     
     const handleNavigationCustomize = (e) => {
         e.preventDefault(); 
-        navigate('/Customize', { state: {store_name, email, user_id} });
       };
+
+    function changeStoreState(){
+        if(storeState){
+            setStoreState(false)
+        }else{
+            setStoreState(true)
+        }
+
+        SocketIO.current.emit(socketConfig.updateStoreState, {Store: user, State: !storeState})
+    }
+
+    
     return (
         <header className="header-container">
         <div className="header-inner">
             {/* Logo Section */}
+            <div onClick={()=> changeStoreState()}>Close</div>
             <div className="header-logo">
             <span className="header-logo-text">Logo</span>
             </div>
             
             {/* Navigation Section */}
             <nav className="header-nav">
-            <a href="#" className="header-nav-link" onClick={()=> navigate('/Dashboard')}>
+            <a href="#" className="header-nav-link" onClick={()=> navigate('/Home')}>
                 <Home size={18} />
                 <span>Dashboard</span>
             </a>
@@ -28,7 +43,7 @@ export default function Header({displayMenu, store_name, user_id, email}) {
                 <Palette size={18} />
                 <span>Customize</span>
             </a>
-            <a href="#" className="header-nav-link" onClick={()=> displayMenu()}>
+            <a href="#" className="header-nav-link" onClick={()=> navigate('/MenuPage')}>
                 <Menu size={18} />
                 <span>Menu</span>
             </a>

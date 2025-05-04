@@ -1,4 +1,7 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Header from "../components/header";
 import "../styles/menu.css";
 
 const menuData = [
@@ -30,27 +33,31 @@ const menuData = [
 
 function MenuPage() {
   return (
-    <div className="menu-container">
-      <h1 className="menu-title">Our Menu</h1>
-      <input type="text" placeholder="Search menu..."/>
-      {menuData.map((menu) => (
-        <div key={menu.name} className="menu-section">
-          <h2 className="menu-category">{menu.name}</h2>
-          <div className="food-list">
-            {menu.foods.map((food) => (
-              <div key={food.name} className="food-item">
-                <img src={food.image} alt={food.name} className="food-image" />
-                <div className="food-details">
-                  <p className="food-name">{food.name}</p>
-                  <span className="food-quantity">({food.quantity})</span>
+    <>
+      <Header/>
+      <div className="menu-container">
+        <h1 className="menu-title">Our Menu</h1>
+        <input type="text" placeholder="Search menu..."/>
+        {menuData.map((menu) => (
+          <div key={menu.name} className="menu-section">
+            <h2 className="menu-category">{menu.name}</h2>
+            <div className="food-list">
+              {menu.foods.map((food) => (
+                <div key={food.name} className="food-item">
+                  <img src={food.image} alt={food.name} className="food-image" />
+                  <div className="food-details">
+                    <p className="food-name">{food.name}</p>
+                    <span className="food-quantity">({food.quantity})</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    </>
+    );
+    
 }
 
 export default MenuPage;

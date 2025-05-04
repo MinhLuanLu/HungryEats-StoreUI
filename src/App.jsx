@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { UserProvider } from './context/user_Context'
 import Login from './pages/login'
 import Customize from './pages/customize';
+import MenuPage from './pages/menu';
 
 import Home from './pages/home';
 
@@ -17,6 +18,7 @@ function App() {
               <Route path='/Login' element={<Login/>} />
               <Route path='/Home' element={<Home/>}/>
               <Route path='/Customize' element={<Customize/>}/>
+              <Route path='/MenuPage' element={<MenuPage/>}/>
           </Routes>
         </BrowserRouter>
       </UserProvider>
