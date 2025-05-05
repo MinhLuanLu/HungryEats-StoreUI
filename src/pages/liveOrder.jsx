@@ -20,12 +20,12 @@ const OrderCard = ({ order, stage, AcceptPendingButton, DeclinePendingButton, Ac
       ))}
       <span><strong>Pickup:</strong> {order.Pickup_time}</span>
       <div className="buttons">
-        {stage === orderStatusConfig.pending && (
+        {stage === orderStatusConfig.pending || stage === orderStatusConfig.unprocessing ? (
           <>
             <button className="accept" onClick={()=> AcceptPendingButton(order)}>Accept</button>
             <button className="decline" onClick={()=> DeclinePendingButton(order)}>Cancel</button>
           </>
-        )}
+        ) : null }
         {stage === orderStatusConfig.procesing && (
           <>
             <button className="accept" onClick={()=> AcceptReadyButton(order)}>Ready</button>
@@ -49,8 +49,8 @@ const LiveOrders = ({userData, SocketIO}) => {
     if (SocketIO.current) {
       const handleNewOrder = (order) => {
         console.log(order);
-
         setOrders((prevOrders) => [...prevOrders, order]);
+    
         setTimeout(() => {
           console.log("Send received order confirm to server");
           SocketIO.current.emit(socketConfig.confirmRecivedOrder, order);
@@ -63,6 +63,9 @@ const LiveOrders = ({userData, SocketIO}) => {
       };
     }
   }, []);
+
+  
+  
   
  
   useEffect(()=>{
@@ -135,7 +138,7 @@ const LiveOrders = ({userData, SocketIO}) => {
         <div className="column">
           <h2>Pending</h2>
           {orders.length != 0 &&  orders.map((order, idx) => (
-            order.Order_status == orderStatusConfig.pending && <OrderCard key={idx} order={order} stage={order.Order_status} AcceptPendingButton={()=> AcceptPendingButton(order, true)} DeclinePendingButton={()=> AcceptPendingButton(order, false)}/>
+            order.Order_status == orderStatusConfig.pending || order.Order_status == orderStatusConfig.unprocessing ? <OrderCard key={idx} order={order} stage={order.Order_status} AcceptPendingButton={()=> AcceptPendingButton(order, true)} DeclinePendingButton={()=> AcceptPendingButton(order, false)}/>  : null
           ))}
         </div>
         <div className="column">
