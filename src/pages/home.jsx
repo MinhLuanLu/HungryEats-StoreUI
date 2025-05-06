@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import Header from "../components/header";
 import LiveOrders from "./liveOrder";
 import MenuPage from "./menu";
+import "../styles/home.css"
 
 
 

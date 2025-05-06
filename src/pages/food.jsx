@@ -25,11 +25,14 @@ export default function Food({ foodData, onclose, saveChange, SocketIO }) {
   return (
     <div style={styles.card}>
       <button style={styles.xbutton} onClick={onclose}>X</button>
-      <img
-        src={`${API_LOCATION}/${food.Food_image}`}
-        alt={food.Food_name}
-        style={styles.image}
-      />
+      <div>
+        <img
+          src={`${API_LOCATION}/${food.Food_image}`}
+          alt={food.Food_name}
+          style={styles.image}
+        />
+        <button style={styles.changeImage}>change image</button>
+      </div>
       <div style={styles.details}>
         <input
           name="Food_name"
@@ -81,15 +84,15 @@ export default function Food({ foodData, onclose, saveChange, SocketIO }) {
 
 const styles = {
   card: {
-    width: '600px',
+    width: '60%',
     margin: '2rem auto',
     borderRadius: '12px',
-    overflow: 'hidden',
     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
     backgroundColor: '#fff',
     fontFamily: '"Segoe UI", sans-serif',
     position: 'relative',
-    paddingBottom: '20px', // Add bottom padding for Save button
+    paddingBottom: '20px',
+    overflow:"auto" // Add bottom padding for Save button
   },
   xbutton: {
     position: 'absolute',
@@ -167,4 +170,11 @@ const styles = {
     fontWeight: 'bold',
     transition: 'background-color 0.3s ease',
   },
+
+  changeImage:{
+    position:"absolute",
+    left:10,
+    top:10
+  }
+  
 };

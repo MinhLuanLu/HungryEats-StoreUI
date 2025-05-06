@@ -41,7 +41,7 @@ export default function Header({SocketIO, user, displayMenu, displayLiveOrder}) 
                 <Home size={18} />
                 <span>Dashboard</span>
             </a>
-            <a href="#" className="header-nav-link" onClick={handleNavigationCustomize}>
+            <a href="#" className="header-nav-link" onClick={()=> navigate("/Customize")}>
                 <Palette size={18} />
                 <span>Customize</span>
             </a>
