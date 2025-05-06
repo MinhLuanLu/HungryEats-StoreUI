@@ -4,11 +4,12 @@ import { Home, Settings, Menu, Palette, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { socketConfig } from "../../config";
 import "../styles/header.css"
+import MenuPage from "../pages/menu";
 
-export default function Header({SocketIO, user}) {
+export default function Header({SocketIO, user, displayMenu, displayLiveOrder}) {
     const navigate = useNavigate();
     const [storeState, setStoreState] = useState(true);
-    
+   
     const handleNavigationCustomize = (e) => {
         e.preventDefault(); 
       };
@@ -24,6 +25,7 @@ export default function Header({SocketIO, user}) {
     }
 
     
+    
     return (
         <header className="header-container">
         <div className="header-inner">
@@ -35,7 +37,7 @@ export default function Header({SocketIO, user}) {
             
             {/* Navigation Section */}
             <nav className="header-nav">
-            <a href="#" className="header-nav-link" onClick={()=> navigate('/Home')}>
+            <a href="#" className="header-nav-link" onClick={()=> displayLiveOrder()}>
                 <Home size={18} />
                 <span>Dashboard</span>
             </a>
@@ -43,7 +45,7 @@ export default function Header({SocketIO, user}) {
                 <Palette size={18} />
                 <span>Customize</span>
             </a>
-            <a href="#" className="header-nav-link" onClick={()=> navigate('/MenuPage')}>
+            <a href="#" className="header-nav-link" onClick={()=> displayMenu()}>
                 <Menu size={18} />
                 <span>Menu</span>
             </a>

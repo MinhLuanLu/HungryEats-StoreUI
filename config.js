@@ -11,7 +11,8 @@ export const socketConfig = {
     processOrder: "user.newOrderHandler.1",
     confirmRecivedOrder: "store.confirmRecivedOrder.1",
     updateStoreState: "store.updateStoreState.1",
-    orderAction: "store.orderAction.1"
+    orderAction: "store.orderAction.1",
+    updateFoodData: 'store.updateFoodData.1'
 }
 
 export const orderStatusConfig = {

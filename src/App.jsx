@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { UserProvider } from './context/user_Context'
 import Login from './pages/login'
 import Customize from './pages/customize';
 import MenuPage from './pages/menu';
+
 
 import Home from './pages/home';
 
@@ -11,7 +11,6 @@ function App() {
 
   return (
     <>
-      <UserProvider>
         <BrowserRouter>
           <Routes>
               <Route index element={<Login/>}/>
@@ -21,7 +20,7 @@ function App() {
               <Route path='/MenuPage' element={<MenuPage/>}/>
           </Routes>
         </BrowserRouter>
-      </UserProvider>
+        
     </>
   )
 }

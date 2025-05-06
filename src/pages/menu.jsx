@@ -3,51 +3,78 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Header from "../components/header";
 import "../styles/menu.css";
+import { API_LOCATION } from "../../config";
+import { useNavigate } from "react-router-dom";
+import Food from "./food";
 
-const menuData = [
-  {
-    name: "Breakfast",
-    foods: [
-      { name: "Scrambled Eggs", quantity: 5, image: "/images/scrambled-eggs.jpg" },
-      { name: "Pancakes", quantity: 3, image: "/images/pancakes.jpg" },
-      { name: "Fruit Salad", quantity: 7, image: "/images/fruit-salad.jpg" },
-    ],
-  },
-  {
-    name: "Lunch",
-    foods: [
-      { name: "Grilled Chicken", quantity: 4, image: "/images/grilled-chicken.jpg" },
-      { name: "Caesar Salad", quantity: 6, image: "/images/caesar-salad.jpg" },
-      { name: "Spaghetti Bolognese", quantity: 3, image: "/images/spaghetti.jpg" },
-    ],
-  },
-  {
-    name: "Dinner",
-    foods: [
-      { name: "Steak", quantity: 2, image: "/images/steak.jpg" },
-      { name: "Roasted Vegetables", quantity: 5, image: "/images/roasted-veggies.jpg" },
-      { name: "Chicken Curry", quantity: 4, image: "/images/chicken-curry.jpg" },
-    ],
-  },
-];
 
-function MenuPage() {
+
+function MenuPage({SocketIO}) {
+
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [menuFood, setMenuFood] = useState([]);
+  const [selectFood, setSelectFood] = useState({})
+  const [displayFoodDetail, setDisplayFoodDetaile] = useState(false)
+
+  useEffect(()=>{
+    async function getMenuFood() {
+      try{
+        const getMenuFood = await axios.get(`${API_LOCATION}/v1/store/menufood/${user.Store_id}`);
+        if(getMenuFood.data.success){
+          console.log(getMenuFood.data.message);
+          setMenuFood(getMenuFood.data.data);
+          console.log(getMenuFood.data.data)
+  
+        }
+  
+      }catch(error){
+        console.log(error)
+      }
+    }
+    getMenuFood()
+  },[user])
+
+
+  function handleEditFood(food){
+    console.log(food)
+    setDisplayFoodDetaile(true)
+    setSelectFood(food)
+  }
+
+
+  function saveChangeHandler(food) {
+  console.log("Food data updated:", food);
+
+  const updatedMenuFood = menuFood.map(menu => {
+    return {
+      ...menu,
+      Food: menu.Food.map(item =>
+        item.Food_id === food.Food_id ? { ...food } : item
+      )
+    };
+  });
+
+  setMenuFood(updatedMenuFood);
+}
+
+  
+
   return (
-    <>
-      <Header/>
+    <div>
       <div className="menu-container">
         <h1 className="menu-title">Our Menu</h1>
         <input type="text" placeholder="Search menu..."/>
-        {menuData.map((menu) => (
-          <div key={menu.name} className="menu-section">
-            <h2 className="menu-category">{menu.name}</h2>
+        {menuFood.map((item, index) => (
+          <div key={index} className="menu-section">
+            <h2 className="menu-category">{item.Menu_name}</h2>
+            <p>{}</p>
             <div className="food-list">
-              {menu.foods.map((food) => (
-                <div key={food.name} className="food-item">
-                  <img src={food.image} alt={food.name} className="food-image" />
+              { item.Food.map((food, Findex)=>(
+                <div key={Findex} className="food-item" onClick={()=> handleEditFood(food)}>
+                  {<img src={`${API_LOCATION}/${food.Food_image}`} alt={food.name} className="food-image" />}
                   <div className="food-details">
-                    <p className="food-name">{food.name}</p>
-                    <span className="food-quantity">({food.quantity})</span>
+                    <p className="food-name">{food.Food_name}</p>
+                    <span className="food-quantity">({food.Quantity}X)</span>
                   </div>
                 </div>
               ))}
@@ -55,7 +82,15 @@ function MenuPage() {
           </div>
         ))}
       </div>
-    </>
+
+      {displayFoodDetail ?
+        <div className="food-Container">
+          <Food SocketIO={SocketIO} foodData={selectFood} onclose={()=> setDisplayFoodDetaile(false)} saveChange={(food)=> saveChangeHandler(food)}/>
+        </div>
+        :
+        null
+      }
+    </div>
     );
     
 }

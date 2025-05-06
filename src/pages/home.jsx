@@ -15,20 +15,22 @@ export default function Home(){
     const location = useLocation();
     const userData = location.state;
     const [storeState, setStoreState] = useState(true);
+    const [displayMenu, setDisplayMenu] = useState(false)
 
     const SocketIO = useRef(null)
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
 
     useEffect(()=>{
-        setUser(userData)
-        console.log(userData)
+        
+        console.log("User login: ", userData)
+        console.log(user)
         if(!SocketIO.current){
             SocketIO.current = io(SOCKETIO_LOCATION);
             console.log(SocketIO.current.id)
 
             SocketIO.current.on('connect', ()=>{
-                SocketIO.current.emit("connection", {Socket_id: SocketIO.current.id, User: Object.keys(user).length > 0 ? User : userData});
-                SocketIO.current.emit(socketConfig.updateStoreState, {Store: userData, State: storeState})
+                SocketIO.current.emit("connection", {Socket_id: SocketIO.current.id, User: Object.keys(user).length > 0 ? user : userData});
+                SocketIO.current.emit(socketConfig.updateStoreState, {Store: user, State: storeState})
             })
         }
 
@@ -39,8 +41,12 @@ export default function Home(){
 
     return(
         <div className="homeContainer">
-            <Header SocketIO={SocketIO} user={user}/>
-            <LiveOrders userData={userData} SocketIO={SocketIO}/>  
+            <Header SocketIO={SocketIO} user={userData} displayMenu={()=> setDisplayMenu(true)} displayLiveOrder={()=> setDisplayMenu(false)}/>
+            {!displayMenu ?
+                <LiveOrders userData={user} SocketIO={SocketIO}/>  
+                :
+                <MenuPage SocketIO={SocketIO}/>
+            }
         </div>
     )
 }

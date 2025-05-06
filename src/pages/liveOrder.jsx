@@ -99,9 +99,19 @@ const LiveOrders = ({userData, SocketIO}) => {
           item.Order_id == order.Order_id ? {...item, Order_status: orderStatusConfig.procesing} : item
         )
       )
+
+      // emit order to user as procesing status//
+      order.Order_status = orderStatusConfig.procesing
+      SocketIO.current.emit(socketConfig.orderAction, order);
+      //////////////////////////////////////////////////////
     }else{
       newOrderStatus = order.Order_status = orderStatusConfig.cancle;
       setOrders(prevData => prevData.filter(item => item.Order_id !== order.Order_id));
+
+      // emit order to user as cancle status//
+      order.Order_status = orderStatusConfig.cancle
+      SocketIO.current.emit(socketConfig.orderAction, order);
+      //////////////////////////////////////////////////////
     }
 
     // update order in database
@@ -110,13 +120,17 @@ const LiveOrders = ({userData, SocketIO}) => {
 
   function AcceptReadyButton(order){
     let newOrderStatus
-    newOrderStatus = order.Order_status = orderStatusConfig.ready
+    newOrderStatus = order.Order_status = orderStatusConfig.ready;
       setOrders(prveOrder => 
         prveOrder.map(item =>
           item.Order_id == order.Order_id ? {...item, Order_status: orderStatusConfig.ready} : item
         )
-    )
-    console.log(order)
+    );
+
+    // emit order to user as cancle status//
+    order.Order_status = orderStatusConfig.ready
+    SocketIO.current.emit(socketConfig.orderAction, order);
+    //////////////////////////////////////////////////////
   }
 
 
@@ -128,7 +142,11 @@ const LiveOrders = ({userData, SocketIO}) => {
           item.Order_id == order.Order_id ? {...item, Order_status: orderStatusConfig.done} : item
         )
     )
-    console.log(order)
+    
+    // emit order to user as cancle status//
+    order.Order_status = orderStatusConfig.done
+    SocketIO.current.emit(socketConfig.orderAction, order);
+    //////////////////////////////////////////////////////
   }
 
   return (

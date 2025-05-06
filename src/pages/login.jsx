@@ -56,7 +56,9 @@ const Login = () => {
   }
 
   function handleNavigate(){
-    navigate("/Home", {state: user})
+    navigate("/Home", {state: user});
+    localStorage.setItem("user", JSON.stringify(user));
+
   }  
 
  
