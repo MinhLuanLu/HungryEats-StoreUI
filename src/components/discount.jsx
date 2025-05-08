@@ -52,7 +52,12 @@ export default function Discount() {
 
     try {
       // You may call DELETE endpoint here
-      // await axios.delete(`${API_LOCATION}/v1/store/discounts/${currentDiscount.Discounts_id}`);
+      console.log("------------- delete discount ---------------")
+      const deleteDiscount = await axios.delete(`${API_LOCATION}/v1/store/discounts/${currentDiscount.Discounts_id}`);
+      if(deleteDiscount.data.success){
+        console.log(deleteDiscount.data.message);
+        setDiscounts(deleteDiscount.data.data);
+      }
 
       setDiscounts((prev) =>
         prev.filter((d) => d.Discounts_id !== currentDiscount.Discounts_id)
@@ -64,14 +69,38 @@ export default function Discount() {
   };
 
   const handleSubmit = async () => {
+    if(currentDiscount.Discount_value == 0 || currentDiscount.Discount_type == "" || currentDiscount.Purchase_count == 0 || currentDiscount.Discount_code == ""){
+      alert("Complete insert all value of discount.");
+      return
+    }
+
     if (currentDiscount.add) {
+      console.log('---------- create discount ---------------')
       // Call POST endpoint here
-      // const res = await axios.post(`${API_LOCATION}/v1/store/discounts`, currentDiscount);
+      const createDiscount = await axios.post(`${API_LOCATION}/v1/store/discounts`, {
+        Data: currentDiscount
+      });
+      if(createDiscount.data.success){
+        console.log(createDiscount.data.message);
+        setDiscounts(createDiscount.data.data);
+      }
+
+
       const newDiscount = { ...currentDiscount, Discounts_id: Date.now() }; // Temp ID
       setDiscounts([...discounts, newDiscount]);
-    } else {
-      // Call PUT endpoint here
-      // await axios.put(`${API_LOCATION}/v1/store/discounts/${currentDiscount.Discounts_id}`, currentDiscount);
+    } 
+    
+    else {
+      console.log('----------- update discount --------------')
+      // Call PATCH endpoint here
+      const updateDiscount = await axios.patch(`${API_LOCATION}/v1/store/discounts`, {
+        Data: currentDiscount
+      });
+      if(updateDiscount.data.success){
+        console.log(updateDiscount.data.message);
+        setDiscounts(updateDiscount.data.data);
+      }
+
       setDiscounts((prev) =>
         prev.map((d) =>
           d.Discounts_id === currentDiscount.Discounts_id ? currentDiscount : d

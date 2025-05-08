@@ -18,6 +18,7 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     min-height: 80vh;
+    overflow-y:scroll;
   }
   
   .column h2 {
