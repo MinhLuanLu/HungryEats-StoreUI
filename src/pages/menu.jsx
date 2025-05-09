@@ -1,20 +1,22 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect , useContext} from "react";
 import axios from "axios";
 import Header from "../components/header";
 import "../styles/menu.css";
 import { API_LOCATION } from "../../config";
 import { useNavigate } from "react-router-dom";
 import Food from "./food";
+import { SocketContext } from "../context/socketContext";
 
 
 
-function MenuPage({SocketIO}) {
+function MenuPage() {
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [menuFood, setMenuFood] = useState([]);
   const [selectFood, setSelectFood] = useState({})
-  const [displayFoodDetail, setDisplayFoodDetaile] = useState(false)
+  const [displayFoodDetail, setDisplayFoodDetaile] = useState(false);
+  const { PublicSocketIO, setPublicSocketIO } = useContext(SocketContext);
 
   useEffect(()=>{
     async function getMenuFood() {
@@ -32,7 +34,9 @@ function MenuPage({SocketIO}) {
       }
     }
     getMenuFood()
-  },[user])
+
+    console.log("aksjjs",PublicSocketIO)
+  },[])
 
 
   function handleEditFood(food){
@@ -61,6 +65,7 @@ function MenuPage({SocketIO}) {
 
   return (
     <div>
+      <Header SocketIO={PublicSocketIO}/>
       <div className="menu-container">
         <h1 className="menu-title">Our Menu</h1>
         <input type="text" placeholder="Search menu..."/>
@@ -81,15 +86,14 @@ function MenuPage({SocketIO}) {
             </div>
           </div>
         ))}
-      </div>
-
-      {displayFoodDetail ?
+        {displayFoodDetail ?
         <div className="food-Container">
-          <Food SocketIO={SocketIO} foodData={selectFood} onclose={()=> setDisplayFoodDetaile(false)} saveChange={(food)=> saveChangeHandler(food)}/>
+          <Food SocketIO={PublicSocketIO} foodData={selectFood} onclose={()=> setDisplayFoodDetaile(false)} saveChange={(food)=> saveChangeHandler(food)}/>
         </div>
         :
         null
       }
+      </div>
     </div>
     );
     

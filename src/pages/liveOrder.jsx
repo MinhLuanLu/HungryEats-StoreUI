@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef} from "react";
 import "../style-css/liveOrder.css"; // optional external CSS
 import axios from "axios";
 import { API_LOCATION } from "../../config";
 import { orderStatusConfig } from "../../config";
 import { socketConfig } from "../../config";
-
+import NotificationMessage from "../components/notificationMessage";
+import sound from "../assets/audio/orderSound.mp3"
 
 
 const OrderCard = ({ order, stage, AcceptPendingButton, DeclinePendingButton, AcceptReadyButton, removeOrderButton }) => {
@@ -43,18 +44,24 @@ const OrderCard = ({ order, stage, AcceptPendingButton, DeclinePendingButton, Ac
 const LiveOrders = ({userData, SocketIO}) => {
 
   const [orders, setOrders] = useState([]);
-  const [user, setUser] = useState(userData)
+  const [user, setUser] = useState(userData);
+  const [newOrderEvent, setNewOrderEvent] = useState(false)
+
 
   useEffect(() => {
     if (SocketIO.current) {
       const handleNewOrder = (order) => {
         console.log(order);
+        setNewOrderEvent(true)
+        handlePlay()
         setOrders((prevOrders) => [...prevOrders, order]);
-    
+  
         setTimeout(() => {
           console.log("Send received order confirm to server");
           SocketIO.current.emit(socketConfig.confirmRecivedOrder, order);
-        }, 2000);
+          setNewOrderEvent(false)
+        }, 2500);
+        
       };
   
       SocketIO.current.on(socketConfig.processOrder, handleNewOrder);
@@ -65,7 +72,9 @@ const LiveOrders = ({userData, SocketIO}) => {
   }, []);
 
   
-  
+  const handlePlay = () => {
+    new Audio(sound).play()
+  };
   
  
   useEffect(()=>{
@@ -150,29 +159,34 @@ const LiveOrders = ({userData, SocketIO}) => {
   }
 
   return (
-    <div style={{ padding: "20px", backgroundColor: "#f3f3f3", minHeight: "100vh", fontFamily: "sans-serif" }}>
-      <h1 style={{ textAlign: "center", fontSize: "36px", marginBottom: "20px" }}>Order Display</h1>
-      <div className="container">
-        <div className="column">
-          <h2>Pending</h2>
-          {orders.length != 0 &&  orders.map((order, idx) => (
-            order.Order_status == orderStatusConfig.pending || order.Order_status == orderStatusConfig.unprocessing ? <OrderCard key={idx} order={order} stage={order.Order_status} AcceptPendingButton={()=> AcceptPendingButton(order, true)} DeclinePendingButton={()=> AcceptPendingButton(order, false)}/>  : null
-          ))}
-        </div>
-        <div className="column">
-          <h2>In Progress</h2>
-          {orders.map((order, idx) => (
-            order.Order_status == orderStatusConfig.procesing && <OrderCard key={idx} order={order} stage={order.Order_status} AcceptReadyButton={()=> AcceptReadyButton(order)} />
-          ))}
-        </div>
-        <div className="column">
-          <h2>Ready</h2>
-          {orders.map((order, idx) => (
-            order.Order_status == orderStatusConfig.ready && <OrderCard key={idx} order={order} stage={order.Order_status} removeOrderButton={()=> removeOrderButton(order)} />
-          ))}
+    <>
+      <div className="NotificationContainer">
+          {newOrderEvent ? <NotificationMessage message="New order recived"/> : null}
+      </div>
+      <div style={{ padding: "20px", backgroundColor: "#f3f3f3", minHeight: "100vh", fontFamily: "sans-serif", marginTop:"50px"}}>
+        <h1 style={{ textAlign: "center", fontSize: "36px", marginBottom: "20px" }}>Order Display</h1>
+        <div className="container">
+          <div className="column">
+            <h2>Pending</h2>
+            {orders.length != 0 &&  orders.map((order, idx) => (
+              order.Order_status == orderStatusConfig.pending || order.Order_status == orderStatusConfig.unprocessing ? <OrderCard key={idx} order={order} stage={order.Order_status} AcceptPendingButton={()=> AcceptPendingButton(order, true)} DeclinePendingButton={()=> AcceptPendingButton(order, false)}/>  : null
+            ))}
+          </div>
+          <div className="column">
+            <h2>In Progress</h2>
+            {orders.map((order, idx) => (
+              order.Order_status == orderStatusConfig.procesing && <OrderCard key={idx} order={order} stage={order.Order_status} AcceptReadyButton={()=> AcceptReadyButton(order)} />
+            ))}
+          </div>
+          <div className="column">
+            <h2>Ready</h2>
+            {orders.map((order, idx) => (
+              order.Order_status == orderStatusConfig.ready && <OrderCard key={idx} order={order} stage={order.Order_status} removeOrderButton={()=> removeOrderButton(order)} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

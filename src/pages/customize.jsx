@@ -10,7 +10,7 @@ export default function Customize() {
 
   return(
     <>
-      <Header/>
+      <Header home="Home"/>
       <Discount/>
     </>
   )

@@ -84,7 +84,7 @@ export default function Food({ foodData, onclose, saveChange, SocketIO }) {
 
 const styles = {
   card: {
-    width: '60%',
+    width: '50%',
     margin: '2rem auto',
     borderRadius: '12px',
     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
@@ -92,7 +92,9 @@ const styles = {
     fontFamily: '"Segoe UI", sans-serif',
     position: 'relative',
     paddingBottom: '20px',
-    overflow:"auto" // Add bottom padding for Save button
+    overflow:"auto",
+    height:"auto",
+    maxHeight: "15%"
   },
   xbutton: {
     position: 'absolute',

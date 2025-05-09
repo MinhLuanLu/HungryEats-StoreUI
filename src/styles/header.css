@@ -3,6 +3,10 @@
     width: 100%;
     background-color: white;
     border-bottom: 1px solid #e5e7eb; /* gray-200 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
   }
   
   .header-inner {

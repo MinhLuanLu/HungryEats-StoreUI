@@ -75,7 +75,8 @@ export default function Discount() {
     }
 
     if (currentDiscount.add) {
-      console.log('---------- create discount ---------------')
+      console.log('---------- create discount ---------------');
+      currentDiscount.Store = user
       // Call POST endpoint here
       const createDiscount = await axios.post(`${API_LOCATION}/v1/store/discounts`, {
         Data: currentDiscount
@@ -91,7 +92,8 @@ export default function Discount() {
     } 
     
     else {
-      console.log('----------- update discount --------------')
+      console.log('----------- update discount --------------');
+      currentDiscount.Store = user
       // Call PATCH endpoint here
       const updateDiscount = await axios.patch(`${API_LOCATION}/v1/store/discounts`, {
         Data: currentDiscount
@@ -156,7 +158,7 @@ export default function Discount() {
                   style={styles.input}
                 >
                   <option value="percentage">Percentage</option>
-                  <option value="flat">Flat</option>
+                  <option value="flat">...</option>
                 </select>
               </label>
               <label style={styles.label}>
@@ -222,6 +224,7 @@ const styles = {
     borderRadius: "10px",
     background: "#f9f9f9",
     fontFamily: "Arial, sans-serif",
+    marginTop:"100px"
   },
   header: {
     textAlign: "center",
