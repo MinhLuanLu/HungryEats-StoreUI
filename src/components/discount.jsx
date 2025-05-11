@@ -158,7 +158,7 @@ export default function Discount() {
                   style={styles.input}
                 >
                   <option value="percentage">Percentage</option>
-                  <option value="flat">...</option>
+                  <option value="percentage">...</option>
                 </select>
               </label>
               <label style={styles.label}>

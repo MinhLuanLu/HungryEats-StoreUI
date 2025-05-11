@@ -83,3 +83,10 @@
     justify-content: center;
     align-items: center;
   }
+
+  .NotificationContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
