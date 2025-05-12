@@ -73,7 +73,24 @@ function MenuPage() {
 
 }
 
-  
+
+function HandelUploadFoodImage(food){
+  setSaveChangeStatus(true);
+  const updatedMenuFood = menuFood.map(menu => {
+    return {
+      ...menu,
+      Food: menu.Food.map(item =>
+        item.Food_id === food.Food_id ? { ...food } : item
+      )
+    };
+  });
+
+  setMenuFood(updatedMenuFood);
+
+  setTimeout(()=>{
+    setSaveChangeStatus(false)
+  },2500)
+}
 
   return (
     <div>
@@ -103,7 +120,7 @@ function MenuPage() {
         ))}
         {displayFoodDetail ?
         <div className="food-Container">
-          <Food foodData={selectFood} onclose={()=> setDisplayFoodDetaile(false)} saveChange={(food)=> saveChangeHandler(food)}/>
+          <Food foodData={selectFood} onclose={()=> setDisplayFoodDetaile(false)} saveChange={(food)=> saveChangeHandler(food)} uploadImage={(food)=> HandelUploadFoodImage(food)}/>
         </div>
         :
         null

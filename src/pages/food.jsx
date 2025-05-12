@@ -4,7 +4,7 @@ import { socketConfig } from '../../config';
 import axios from 'axios';
 import "../styles/food.css";
 
-export default function Food({ foodData, onclose, saveChange, SocketIO }) {
+export default function Food({ foodData, onclose, saveChange, SocketIO, uploadImage }) {
   const [food, setFood] = useState({ ...foodData });
   const [imageFile, setImageFile] = useState(null);
   const [newImage, setNewImage] = useState(null)
@@ -45,8 +45,10 @@ export default function Food({ foodData, onclose, saveChange, SocketIO }) {
 
         if(sendImage.data.success){
           console.log(sendImage.data.message)
-          alert('update image successfully.');
-          setNewImage(sendImage.data.data)
+          //alert('update image successfully.');
+          setNewImage(sendImage.data.data);
+          setFood(sendImage.data.data);
+          uploadImage(sendImage.data.data)
         }
       }
       catch(error){
