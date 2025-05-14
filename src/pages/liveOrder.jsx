@@ -54,7 +54,7 @@ const LiveOrders = ({userData, SocketIO}) => {
         console.log(order);
         setNewOrderEvent(true)
         handlePlay()
-        setOrders((prevOrders) => [...prevOrders, order]);
+        setOrders((prevOrders) => [order, ...prevOrders]);
   
         setTimeout(() => {
           console.log("Send received order confirm to server");
