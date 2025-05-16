@@ -1,44 +1,13 @@
 import React, { useEffect, useState , useRef} from "react";
-import "../style-css/liveOrder.css"; // optional external CSS
+import "../styles/liveOrder.css"; // optional external CSS
 import axios from "axios";
 import { API_LOCATION } from "../../config";
 import { orderStatusConfig } from "../../config";
 import { socketConfig } from "../../config";
 import NotificationMessage from "../components/notificationMessage";
 import sound from "../assets/audio/orderSound.mp3"
-
-
-const OrderCard = ({ order, stage, AcceptPendingButton, DeclinePendingButton, AcceptReadyButton, removeOrderButton }) => {
-  return (
-    <div className="order">
-      <span><strong>ID:</strong> #{order.Order_id}</span>
-      <span><strong>Name:</strong> {order.Username}</span>
-      {order.Food_item.map((food, index)=>(
-        <span key={index}><strong>Order:</strong> {food.Food_name} ({food.Food_quantity}x)</span>
-      ))}
-      {order.Drink_item != undefined && order.Drink_item.map((drink, index)=>(
-        <span key={index}>{drink.Drink_name} ({drink.Drink_quantity}x)</span>
-      ))}
-      <span><strong>Pickup:</strong> {order.Pickup_time}</span>
-      <div className="buttons">
-        {stage === orderStatusConfig.pending || stage === orderStatusConfig.unprocessing ? (
-          <>
-            <button className="accept" onClick={()=> AcceptPendingButton(order)}>Accept</button>
-            <button className="decline" onClick={()=> DeclinePendingButton(order)}>Cancel</button>
-          </>
-        ) : null }
-        {stage === orderStatusConfig.procesing && (
-          <>
-            <button className="accept" onClick={()=> AcceptReadyButton(order)}>Ready</button>
-          </>
-        )}
-        {stage === orderStatusConfig.ready && (
-          <button className="decline" onClick={()=> removeOrderButton(order)}>Remove</button>
-        )}
-      </div>
-    </div>
-  );
-};
+import OrderCard from "../components/orderCard";
+import { Header } from "semantic-ui-react";
 
 
 const LiveOrders = ({userData, SocketIO}) => {
@@ -167,19 +136,25 @@ const LiveOrders = ({userData, SocketIO}) => {
         <h1 style={{ textAlign: "center", fontSize: "36px", marginBottom: "20px" }}>Order Display</h1>
         <div className="container">
           <div className="column">
-            <h2>Pending</h2>
+            <Header as='h2' dividing>
+              Pending
+            </Header>
             {orders.length != 0 &&  orders.map((order, idx) => (
               order.Order_status == orderStatusConfig.pending || order.Order_status == orderStatusConfig.unprocessing ? <OrderCard key={idx} order={order} stage={order.Order_status} AcceptPendingButton={()=> AcceptPendingButton(order, true)} DeclinePendingButton={()=> AcceptPendingButton(order, false)}/>  : null
             ))}
           </div>
           <div className="column">
-            <h2>In Progress</h2>
+            <Header as='h2' dividing>
+              In Progress
+            </Header>
             {orders.map((order, idx) => (
               order.Order_status == orderStatusConfig.procesing && <OrderCard key={idx} order={order} stage={order.Order_status} AcceptReadyButton={()=> AcceptReadyButton(order)} />
             ))}
           </div>
           <div className="column">
-            <h2>Ready</h2>
+            <Header as='h2' dividing>
+              Ready
+            </Header>
             {orders.map((order, idx) => (
               order.Order_status == orderStatusConfig.ready && <OrderCard key={idx} order={order} stage={order.Order_status} removeOrderButton={()=> removeOrderButton(order)} />
             ))}

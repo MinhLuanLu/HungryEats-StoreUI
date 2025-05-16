@@ -4,11 +4,12 @@ import axios from "axios";
 import Header from "../components/header";
 import "../styles/menu.css";
 import { API_LOCATION } from "../../config";
-import { useNavigate } from "react-router-dom";
 import { socketConfig } from "../../config";
-import Food from "./food";
 import { SocketContext } from "../context/socketContext";
 import NotificationMessage from "../components/notificationMessage";
+import EditFood from "../components/editFood";
+import { Button } from "semantic-ui-react";
+import CreateFood from "../components/createFood";
 
 
 function MenuPage() {
@@ -16,9 +17,10 @@ function MenuPage() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [menuFood, setMenuFood] = useState([]);
   const [selectFood, setSelectFood] = useState({})
-  const [displayFoodDetail, setDisplayFoodDetaile] = useState(false);
+  const [displayEditFood, setDisplayEditFood] = useState(false);
   const { PublicSocketIO, setPublicSocketIO } = useContext(SocketContext);
-  const [saveChangeStatus, setSaveChangeStatus] = useState(false)
+  const [saveChangeStatus, setSaveChangeStatus] = useState(false);
+  const [displayCreateFood, setDisplayCreateFood] = useState(false)
 
   useEffect(()=>{
     async function getMenuFood() {
@@ -41,7 +43,7 @@ function MenuPage() {
 
   function handleEditFood(food){
     console.log(food)
-    setDisplayFoodDetaile(true)
+    setDisplayEditFood(true)
     setSelectFood(food)
   }
 
@@ -62,6 +64,7 @@ function MenuPage() {
     });
   
     setMenuFood(updatedMenuFood);
+    setDisplayEditFood(false)
   
     setTimeout(()=>{
       setSaveChangeStatus(false)
@@ -74,23 +77,23 @@ function MenuPage() {
 }
 
 
-function HandelUploadFoodImage(food){
-  setSaveChangeStatus(true);
-  const updatedMenuFood = menuFood.map(menu => {
-    return {
-      ...menu,
-      Food: menu.Food.map(item =>
-        item.Food_id === food.Food_id ? { ...food } : item
-      )
-    };
-  });
+  function HandelUploadFoodImage(food){
+    setSaveChangeStatus(true);
+    const updatedMenuFood = menuFood.map(menu => {
+      return {
+        ...menu,
+        Food: menu.Food.map(item =>
+          item.Food_id === food.Food_id ? { ...food } : item
+        )
+      };
+    });
 
-  setMenuFood(updatedMenuFood);
+    setMenuFood(updatedMenuFood);
 
-  setTimeout(()=>{
-    setSaveChangeStatus(false)
-  },2500)
-}
+    setTimeout(()=>{
+      setSaveChangeStatus(false)
+    },2500)
+  }
 
   return (
     <div>
@@ -99,12 +102,13 @@ function HandelUploadFoodImage(food){
       </div>
       <Header SocketIO={PublicSocketIO}/>
       <div className="menu-container">
-        <h1 className="menu-title">Our Menu</h1>
-        <input type="text" placeholder="Search menu..."/>
+        <h1 className="menu-title">Your Menu</h1>
+        <div style={{width:'100%',display:'flex', flexDirection:'row', justifyContent:'right'}}>
+          <Button content='Create food' secondary onClick={()=> setDisplayCreateFood(true)} />
+        </div>
         {menuFood.map((item, index) => (
           <div key={index} className="menu-section">
             <h2 className="menu-category">{item.Menu_name}</h2>
-            <p>{}</p>
             <div className="food-list">
               { item.Food.map((food, Findex)=>(
                 <div key={Findex} className="food-item" onClick={()=> handleEditFood(food)}>
@@ -118,13 +122,11 @@ function HandelUploadFoodImage(food){
             </div>
           </div>
         ))}
-        {displayFoodDetail ?
-        <div className="food-Container">
-          <Food foodData={selectFood} onclose={()=> setDisplayFoodDetaile(false)} saveChange={(food)=> saveChangeHandler(food)} uploadImage={(food)=> HandelUploadFoodImage(food)}/>
-        </div>
-        :
-        null
-      }
+        
+      <div className="food-Container">
+          <EditFood open={displayEditFood} foodData={selectFood} onclose={()=> setDisplayEditFood(false)} saveChange={(food)=> saveChangeHandler(food)} uploadImage={(food)=> HandelUploadFoodImage(food)}/>
+          <CreateFood open={displayCreateFood} onclose={() => setDisplayCreateFood(false)}/>
+      </div>
       </div>
     </div>
     );

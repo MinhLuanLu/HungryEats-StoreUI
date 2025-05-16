@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import 'semantic-ui-css/semantic.min.css'
 import Login from './pages/login'
 import Customize from './pages/customize';
 import MenuPage from './pages/menu';
 import { SocketProvider } from './context/socketContext';
+
 
 import Home from './pages/home';
 
