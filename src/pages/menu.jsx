@@ -8,8 +8,13 @@ import { socketConfig } from "../../config";
 import { SocketContext } from "../context/socketContext";
 import NotificationMessage from "../components/notificationMessage";
 import EditFood from "../components/editFood";
-import { Button } from "semantic-ui-react";
+import { Button, Input } from "semantic-ui-react";
 import CreateFood from "../components/createFood";
+import OptionModal from "../components/OptionMadal";
+import EditMenu from "../components/editMenuModal";
+
+import binIcon from "../assets/icons/bin.png";
+import editIcon from "../assets/icons/edit.png"
 
 
 function MenuPage() {
@@ -20,7 +25,10 @@ function MenuPage() {
   const [displayEditFood, setDisplayEditFood] = useState(false);
   const { PublicSocketIO, setPublicSocketIO } = useContext(SocketContext);
   const [saveChangeStatus, setSaveChangeStatus] = useState(false);
-  const [displayCreateFood, setDisplayCreateFood] = useState(false)
+  const [displayCreateFood, setDisplayCreateFood] = useState(false);
+  const [displayDeleteFood, setDisplayDeleteFood] = useState(false);
+  const [editMenu, setEditMenu] = useState(false)
+  const [selectMenu, setSelectMenu] = useState()
 
   useEffect(()=>{
     async function getMenuFood() {
@@ -49,33 +57,40 @@ function MenuPage() {
 
 
   function saveChangeHandler(food) {
-  console.log("Food data updated:", food);
-  if(PublicSocketIO.current){
-    PublicSocketIO.current.emit(socketConfig.updateFoodData, {Food: food})
+    console.log("Food data updated:", food);
+    if(PublicSocketIO.current){
+      PublicSocketIO.current.emit(socketConfig.updateFoodData, {Food: food})
+      setSaveChangeStatus(true);
+
+      const updatedMenuFood = menuFood.map(menu => {
+        return {
+          ...menu,
+          Food: menu.Food.map(item =>
+            item.Food_id === food.Food_id ? { ...food } : item
+          )
+        };
+      });
+    
+      setMenuFood(updatedMenuFood);
+      setDisplayEditFood(false)
+    
+      setTimeout(()=>{
+        setSaveChangeStatus(false)
+      },2500)
+    }
+    else{
+      alert("Connection failed to again later!")
+    }
+  }
+
+
+  function HandleAddNewFood(food){
+    console.log('Add new food to list', food);
+    //setMenuFood((prveList) => [food, ...prveList]);
     setSaveChangeStatus(true);
-
-    const updatedMenuFood = menuFood.map(menu => {
-      return {
-        ...menu,
-        Food: menu.Food.map(item =>
-          item.Food_id === food.Food_id ? { ...food } : item
-        )
-      };
-    });
-  
-    setMenuFood(updatedMenuFood);
-    setDisplayEditFood(false)
-  
-    setTimeout(()=>{
-      setSaveChangeStatus(false)
-    },2500)
+    setDisplayCreateFood(false)
+    
   }
-  else{
-    alert("Connection failed to again later!")
-  }
-
-}
-
 
   function HandelUploadFoodImage(food){
     setSaveChangeStatus(true);
@@ -95,6 +110,28 @@ function MenuPage() {
     },2500)
   }
 
+
+  function handleDeleteFood(foodIdToRemove){
+    console.log('Delete food', foodIdToRemove);
+
+    setMenuFood(prevMenus => 
+      prevMenus.map(menu => ({
+        ...menu,
+        Food: menu.Food.filter(food => food.Food_id !== foodIdToRemove.Food_id)
+      }))
+    );
+    setDisplayDeleteFood(false);
+    setDisplayEditFood(false)
+    setSaveChangeStatus(true);
+
+  };
+
+
+  function handleUpdateMenu() {
+    setEditMenu(false);
+    setSaveChangeStatus(true)
+  }
+
   return (
     <div>
       <div className="NotificationContainer">
@@ -108,14 +145,24 @@ function MenuPage() {
         </div>
         {menuFood.map((item, index) => (
           <div key={index} className="menu-section">
-            <h2 className="menu-category">{item.Menu_name}</h2>
+            <div style={{display:'flex', flexDirection:'row', justifyContent:'center'}}>
+              
+              <h2 className="menu-category">{item.Menu_name}</h2>
+              <button onClick={()=> { setEditMenu(true), setSelectMenu(item)}} style={{width:20, height:20, marginLeft:10,display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center', border:'none'}}>
+                <img src={editIcon} style={{width:20, height:20}}/>
+              </button>
+    
+            </div>
             <div className="food-list">
               { item.Food.map((food, Findex)=>(
-                <div key={Findex} className="food-item" onClick={()=> handleEditFood(food)}>
-                  {<img src={food.Food_image} alt={food.name} className="food-image" />}
-                  <div className="food-details">
-                    <p className="food-name">{food.Food_name}</p>
-                    <span className="food-quantity">({food.Quantity}X)</span>
+                <div key={Findex}>
+                  <div className="food-item" onClick={()=> handleEditFood(food)}>
+                    {<img src={food.Food_image} alt={food.name} className="food-image" />}
+                    <div className="food-details">
+                      <p className="food-name">{food.Food_name}</p>
+                      <span className="food-quantity">({food.Quantity}X)</span>
+                    </div>
+                    <button onClick={()=> {setDisplayDeleteFood(true), setSelectFood(food)}} style={{width:30, height:23, marginLeft: 10, backgroundColor:'transparent', border:'none', position:'absolute', right:0, top:-15}}> <img src={binIcon} style={{width:'100%', height:'100%'}} /></button>
                   </div>
                 </div>
               ))}
@@ -125,7 +172,9 @@ function MenuPage() {
         
       <div className="food-Container">
           <EditFood open={displayEditFood} foodData={selectFood} onclose={()=> setDisplayEditFood(false)} saveChange={(food)=> saveChangeHandler(food)} uploadImage={(food)=> HandelUploadFoodImage(food)}/>
-          <CreateFood open={displayCreateFood} onclose={() => setDisplayCreateFood(false)}/>
+          <CreateFood open={displayCreateFood} onclose={() => setDisplayCreateFood(false)} data={menuFood} newFoodItem={(food) => HandleAddNewFood(food)}/>
+          <OptionModal data={selectFood} title="Delete item" message='Are you sure to delete this food' open={displayDeleteFood} onClose={() => {setDisplayDeleteFood(false), setDisplayEditFood(false)}} deleteItem={(removeFood) => handleDeleteFood(removeFood)}/>
+          <EditMenu saveChange={handleUpdateMenu} menuData={selectMenu} open={editMenu} onclose={()=> setEditMenu(false)}/>
       </div>
       </div>
     </div>

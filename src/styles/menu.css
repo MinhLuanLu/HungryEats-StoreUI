@@ -39,6 +39,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
     transition: box-shadow 0.3s ease;
+    position: relative;
   }
   
   .food-item:hover {

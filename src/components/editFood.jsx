@@ -49,7 +49,7 @@ function EditFood({open, foodData, onclose, saveChange, SocketIO, uploadImage })
 
     if(imageFile){
       try{
-        const sendImage = await axios.post(`${API_LOCATION}/v1/store/upload/food/image`, formData, {
+        const sendImage = await axios.patch(`${API_LOCATION}/v1/store/upload/food/image`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -129,6 +129,7 @@ function EditFood({open, foodData, onclose, saveChange, SocketIO, uploadImage })
                     placeholder='Price'
                     value={food.Price}
                     onChange={handleOnChange}
+                    type='number'
                   />
                   <FormField
                       control={Input}
@@ -137,6 +138,7 @@ function EditFood({open, foodData, onclose, saveChange, SocketIO, uploadImage })
                       placeholder='Quantity'
                       value={food.Quantity}
                       onChange={handleOnChange}
+                      type='number'
                   />
                 </FormGroup>
                 

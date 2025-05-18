@@ -13,7 +13,7 @@ import {
   Form,
   Input,
   FormField,
-  Header,
+  Select,
   FormGroup
 } from 'semantic-ui-react';
 import noImage from '../assets/images/noImage.png';
@@ -26,23 +26,42 @@ const fromRequire = [
     "Quantity"
 ]
 
-function CreateFood({open, onclose, newFoodItem}) {
+function CreateFood({open, onclose, data , newFoodItem}) {
   const [dataFrom, setDataFrom] = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [file, setFile] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")))
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [menuOption, setMenuOption] = useState([]);
+  const [createMenu, setCreateMenu] = useState(false);
+  const [selectMenu, setSelectMenu] = useState(null);
 
   useEffect(()=>{
-    setImagePreview(null);
+    /////////////////////////////////////////////
+
     setUser(JSON.parse(localStorage.getItem("user")));
-  },[])
+    setMenuOption(data.map(item => ({
+      key: item.Menu_id,
+      value: item.Menu_id,
+      text: item.Menu_name
+
+    })));
+    setCreateMenu(false);
+    
+  },[data])
 
 
   function handleOnChange(e){
     const { name, value } = e.target;
     setDataFrom(prev => ({ ...prev, [name]: value }));
-  }
+  };
+
+  const handleSelectMenu = (e, { name, value }) => {
+    setSelectMenu(value);
+    dataFrom.Menu_name = "emty"
+    dataFrom.SelectMenu = selectMenu
+  };
+
 
   function checkFile(e){
     const file = e.target.files[0];
@@ -53,35 +72,18 @@ function CreateFood({open, onclose, newFoodItem}) {
     }
   }
 
-  async function fetchCreateFood() {
-    dataFrom.Store = user
-    try{
-        const createFood = await axios.post(`${API_LOCATION}/v1/store/create/food`,{
-            dataFrom
-        });
 
-        if(createFood.data.success){
-            console.log(createFood.data.message)
-            newFoodItem(createFood.data.data);
-            return {success: true}
-        };
-        console.log("Failed to fetch create food!");
-        return {success: false}
-    }
-    catch(error){
-        console.log(error)
-        return {success: true}
-    }
-  };
-
-  async function handleUploadImage(){
+  async function fetchCreateFood(){
+    dataFrom.isNewMenu = createMenu;
+    dataFrom.Store = user;
+    /////////////////////////////
     const formData = new FormData();
     formData.append('image', imageFile); // 'image' should match backend field name
-    formData.append('Food', JSON.stringify(newFood));
+    formData.append('Food', JSON.stringify(dataFrom));
 
     if(imageFile){
       try{
-        const sendImage = await axios.post(`${API_LOCATION}/v1/store/upload/food/image`, formData, {
+        const sendImage = await axios.post(`${API_LOCATION}/v1/food`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -90,7 +92,7 @@ function CreateFood({open, onclose, newFoodItem}) {
         if(sendImage.data.success){
           console.log(sendImage.data.message)
           //alert('update image successfully.');
-          setFood(sendImage.data.data);
+          newFoodItem(sendImage.data.data);
         }
         
       }
@@ -105,25 +107,26 @@ function CreateFood({open, onclose, newFoodItem}) {
         key => !dataFrom[key] || dataFrom[key].toString().trim() === ""
     );
 
+    if(!createMenu && selectMenu == null){
+      alert('Please select menu');
+      return
+    }
+
     if (missingFields.length > 0) {
         alert(`Please fill in all required fields: ${missingFields.join(", ")}`);
         return;
     }
 
+    if(!file){
+      alert('Please choose food image to create a new food');
+      return;
+    }
     //////////////////////////////////////////////////////////////////////////////////
-    if(file){
-        console.log('create food with image');
-        const createFood = await fetchCreateFood();
+    console.log('create food with image');
+    const createFood = await fetchCreateFood();
+    return
 
-        if(createFood.success){
-            console.log('create food successfully, start upload food image')
-            await handleUploadImage();
-        }
-        return
-    };
-
-    console.log('create food no image.');
-    await fetchCreateFood()
+   
   }
 
 
@@ -137,14 +140,47 @@ function CreateFood({open, onclose, newFoodItem}) {
         <Image size='medium' src= {imagePreview == null ? noImage : imagePreview} />
         <ModalDescription style={{ width: '100%'}}>
           <Form>
-            <FormField
-                control={Input}
-                label='Menu name'
-                placeholder='Enter here'
-                name="Menu_name"
-                value={dataFrom.Menu_name}
-                onChange={handleOnChange}
-            />
+            <FormGroup widths='equal'>
+              { createMenu ?
+                <>
+                  <FormField
+                    control={Input}
+                    label='Menu name'
+                    placeholder='Enter here'
+                    name="Menu_name"
+                    value={dataFrom.Menu_name}
+                    onChange={handleOnChange}
+                  />
+                  <Button secondary onClick={()=> setCreateMenu(false)}>Cancle</Button>
+                </>
+                :
+                <>
+                  <FormField
+                    control={Select}
+                    label='Select Menu'
+                    placeholder='Select Menu'
+                    name={JSON.stringify(menuOption.text)}
+                    value={menuOption.value}
+                    options={menuOption}
+                    onChange={handleSelectMenu}
+                  />
+                  <Button secondary onClick={()=> setCreateMenu(true)}>Create menu</Button>
+                </>
+                
+              }
+            </FormGroup>
+            {createMenu &&
+              <FormField
+                  control={Input}
+                  label='Menu description'
+                  placeholder='Enter description here'
+                  name="Menu_description"
+                  value={dataFrom.Menu_description}
+                  onChange={handleOnChange}
+                  
+                  
+              />
+            }
             <FormField
                 control={Input}
                 label='Food name'
@@ -171,6 +207,7 @@ function CreateFood({open, onclose, newFoodItem}) {
                 name="Price"
                 value={dataFrom.Price}  
                 onChange={handleOnChange}  
+                type='number'
                 />
                 <FormField
                     control={Input}
@@ -179,6 +216,7 @@ function CreateFood({open, onclose, newFoodItem}) {
                     placeholder='Enter here'
                     value={dataFrom.Quantity}
                     onChange={handleOnChange}
+                    type='number'
                 />
             </FormGroup>
           </Form>
