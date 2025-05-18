@@ -15,6 +15,7 @@ export default function Home(){
 
     const location = useLocation();
     const userData = location.state;
+    const [storeState, setStoreState] = useState(true);
 
 
     const { PublicSocketIO, setPublicSocketIO } = useContext(SocketContext);

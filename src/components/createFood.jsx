@@ -58,8 +58,10 @@ function CreateFood({open, onclose, data , newFoodItem}) {
 
   const handleSelectMenu = (e, { name, value }) => {
     setSelectMenu(value);
-    dataFrom.Menu_name = "emty"
-    dataFrom.SelectMenu = selectMenu
+    dataFrom.SelectMenu = value;
+    if(!createMenu){
+      dataFrom.Menu_name = "emty"
+    }
   };
 
 
@@ -106,6 +108,8 @@ function CreateFood({open, onclose, data , newFoodItem}) {
     const missingFields = fromRequire.filter(
         key => !dataFrom[key] || dataFrom[key].toString().trim() === ""
     );
+
+    
 
     if(!createMenu && selectMenu == null){
       alert('Please select menu');
@@ -157,7 +161,7 @@ function CreateFood({open, onclose, data , newFoodItem}) {
                 <>
                   <FormField
                     control={Select}
-                    label='Select Menu'
+                    label={`Select Menu ${selectMenu != null && `${selectMenu}`}`}
                     placeholder='Select Menu'
                     name={JSON.stringify(menuOption.text)}
                     value={menuOption.value}

@@ -39,7 +39,7 @@ const OrderCard = ({ order, stage, AcceptPendingButton, DeclinePendingButton, Ac
             : readyOrder
             }
           />
-          <CardHeader>OrderID: {order.Order_id}</CardHeader>
+          <CardHeader>OrderID: #{order.Order_id}</CardHeader>
           <CardMeta>Name: {order.Username}</CardMeta>
           
           {order.Food_item.map((food, index)=>(

@@ -14,7 +14,8 @@ import {
   FormField,
   FormGroup,
   Input
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
+import noImage from '../assets/images/noImage.png';
 
 function EditMenu({open, menuData, onclose, saveChange }) {
 
@@ -22,6 +23,7 @@ function EditMenu({open, menuData, onclose, saveChange }) {
   const [imageFile, setImageFile] = useState(null);
   const [file, setFile] = useState(false)
   const [newImage, setNewImage] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
 
@@ -65,6 +67,7 @@ function EditMenu({open, menuData, onclose, saveChange }) {
     if(file){
       setFile(true);
       setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   }
 
@@ -80,7 +83,7 @@ function EditMenu({open, menuData, onclose, saveChange }) {
       <ModalHeader>Upload image</ModalHeader>
       <input type="file" className="uploadImage" style={{marginLeft:20}} onChange={checkFile}/>
       <ModalContent image>
-        <Image size='large' />
+        <Image size='medium' src= {imagePreview == null ? noImage : imagePreview} />
         <ModalDescription style={{ width: '100%'}}>
             <Form>
                 
